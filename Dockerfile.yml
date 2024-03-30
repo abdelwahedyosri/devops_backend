@@ -1,13 +1,18 @@
-# Stage 1: Build the application
-FROM maven:3.8.4-openjdk-11 AS build
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package -DskipTests
-  
-  # Stage 2: Create the runtime image
-FROM adoptopenjdk/openjdk11:jre-11.0.12_7-alpine
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+version: '3'
+services:
+  sonarqube:
+    image: sonarqube:latest
+    ports:
+      - "9000:9000"
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+  nexus:
+    image: sonatype/nexus3:latest
+    ports:
+      - "8081:8081"
