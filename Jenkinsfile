@@ -2,32 +2,43 @@ pipeline {
     agent any
 
     stages {
-        stage('Execute Commands in Docker Containers') {
+        stage('Start SonarQube') {
             steps {
                 script {
-                    // Execute commands in the SonarQube container
-                    sh "docker exec sonarqube ls -la"
-
-                    // Execute commands in the Prometheus container
-                    sh "docker exec prometheus ps aux"
-
-                    // Execute commands in the Grafana container
-                    sh "docker exec grafana cat /etc/hosts"
-
-                    // Execute commands in the Nexus container
-                    sh "docker exec nexus df -h"
+                    docker.image('sonarqube:latest').run('-d -p 9000:9000 --name sonarqube')
+                }
+            }
+        }
+        stage('Start Prometheus') {
+            steps {
+                script {
+                    docker.image('prom/prometheus:latest').run('-d -p 9090:9090 --name prometheus')
+                }
+            }
+        }
+        stage('Start Grafana') {
+            steps {
+                script {
+                    docker.image('grafana/grafana:latest').run('-d -p 3000:3000 --name grafana')
+                }
+            }
+        }
+        stage('Start Nexus') {
+            steps {
+                script {
+                    docker.image('sonatype/nexus3:latest').run('-d -p 8081:8081 --name nexus')
                 }
             }
         }
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                    // Build Docker image (if needed)
+                    // Build Docker image
                     docker.build("yosriabdelwahed/Devops_Project:latest")
 
-                    // Push Docker image to Docker Hub (if needed)
+                    // Push Docker image to Docker Hub
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        docker.image("yosriabdelwahed/Devops_Project:latest").push()
+                        docker.image("osriabdelwahed/Devops_Project:latest").push()
                     }
                 }
             }
