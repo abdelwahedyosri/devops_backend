@@ -2,6 +2,18 @@ pipeline {
     agent any
 
     stages {
+        stage('Stop and Remove Existing Containers') {
+            steps {
+                script {
+                    // Stop and remove existing containers
+                    docker.stopAll()
+                    docker.remove(container: 'sonarqube', force: true)
+                    docker.remove(container: 'prometheus', force: true)
+                    docker.remove(container: 'grafana', force: true)
+                    docker.remove(container: 'nexus', force: true)
+                }
+            }
+        }
         stage('Start SonarQube') {
             steps {
                 script {
@@ -38,7 +50,7 @@ pipeline {
 
                     // Push Docker image to Docker Hub
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        docker.image("osriabdelwahed/Devops_Project:latest").push()
+                        docker.image("yosriabdelwahed/Devops_Project:latest").push()
                     }
                 }
             }
