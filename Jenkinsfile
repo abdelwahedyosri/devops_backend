@@ -14,11 +14,11 @@ pipeline {
             steps {
                 script {
                     // Build Docker image
-                    docker.build("yosriabdelwahed/Devops_Project:latest")
+                    docker.build("yosriabdelwahed/devopsproject_backend:latest")
 
                     // Push Docker image to Docker Hub
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        docker.image("yosriabdelwahed/Devops_Project:latest").push()
+                        docker.image("yosriabdelwahed/devopsproject_backend:latest").push()
                     }
                 }
             }
