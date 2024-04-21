@@ -1,22 +1,9 @@
-version: '3.7'
+version: '3.8'
 
 services:
-  sonarqube:
-    container_name: sonarqube
-    image: sonarqube:latest
-    ports:
-      - "9000:9000"
-      - "9092:9092"
-    networks:
-      - sonarnet
-    environment:
-      - SONARQUBE_JDBC_URL=jdbc:mysql://mysql:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance&useSSL=false
-      - SONARQUBE_JDBC_USERNAME=sonar
-      - SONARQUBE_JDBC_PASSWORD=sonar
-
   mysql:
-    container_name: mysql
     image: mysql:latest
+    container_name: mysql
     ports:
       - "3306:3306"
     networks:
@@ -26,28 +13,28 @@ services:
       MYSQL_DATABASE: sonar
       MYSQL_USER: sonar
       MYSQL_PASSWORD: sonar
-
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:latest
-    ports:
-      - "9090:9090"
-    networks:
-      - sonarnet
     volumes:
-      - ./prometheus:/etc/prometheus
+      - mysql_data:/var/lib/mysql
 
-  grafana:
-    container_name: grafana
-    image: grafana/grafana:latest
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
     ports:
-      - "3000:3000"
+      - "9000:9000"
+      - "9092:9092"
     networks:
       - sonarnet
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      SONARQUBE_JDBC_URL: jdbc:mysql://mysql:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance&useSSL=false
+      SONARQUBE_JDBC_USERNAME: ${SONARQUBE_JDBC_USERNAME}
+      SONARQUBE_JDBC_PASSWORD: ${SONARQUBE_JDBC_PASSWORD}
     volumes:
-      - ./grafana:/var/lib/grafana
+      - sonar_data:/opt/sonarqube/data
 
 networks:
   sonarnet:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  sonar_data:
