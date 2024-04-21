@@ -26,7 +26,6 @@ pipeline {
                 script {
                     withSonarQubeEnv('sonar-server') {
                         sh '''sonar-scanner \
-                        -Dsonar.projectKey=my_project_key \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=http://sonar-server:9000 \
                         -Dsonar.login=admin \
