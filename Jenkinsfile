@@ -13,17 +13,19 @@ pipeline {
                     // Check if the Docker images are running
                     sh 'docker ps -a'
                     
-                    // Run the Docker containers using docker-compose
-                    sh 'docker-compose up -d'
+                    // Start the containers using Docker Compose
+                    sh 'docker-compose -f docker-compose.yml up -d'
                 }
             }
         }
     }
-    
+
     post {
         always {
-            // Stop and remove the Docker containers
-            sh 'docker-compose down'
+            // Stop and remove containers after build
+            script {
+                sh 'docker-compose -f docker-compose.yml down'
+            }
         }
     }
 }
