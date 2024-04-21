@@ -6,6 +6,11 @@ pipeline {
         SONARQUBE_JDBC_PASSWORD = 'sonar'
     }
 
+    tools {
+        // Define SonarQube Scanner
+        sonarqubeScanner 'sonar-scanner'
+    }
+
     stages {
         stage('Run Containers') {
             steps {
@@ -19,9 +24,11 @@ pipeline {
             steps {
                 // Execute the SonarQube scan
                 script {
-                    withSonarQubeEnv('SonarQube') {
+                    withSonarQubeEnv('sonar-server') {
                         sh '''sonar-scanner \
-                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.projectKey=my_project_key \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://sonar-server:9000 \
                         -Dsonar.login=admin \
                         -Dsonar.password=admin'''
                     }
