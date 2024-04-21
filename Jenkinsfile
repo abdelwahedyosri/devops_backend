@@ -1,9 +1,13 @@
 pipeline {
     agent any
-
+    tools {
+            // Define SonarQube Scanner
+            // Make sure to match the tool name with the one configured in Global Tool Configuration
+            // Replace 'SonarQubeScanner' with the name you provided in Global Tool Configuration
+            sonarqubeScanner 'sonar-scanner'
+        }
     environment {
-        SONARQUBE_JDBC_USERNAME = 'sonar'
-        SONARQUBE_JDBC_PASSWORD = 'sonar'
+        SONARQUBE_HOST_URL = 'http://192.168.33.10:3000'
     }
 
     stages {
@@ -20,7 +24,7 @@ pipeline {
                  script {
                     withSonarQubeEnv('SonarQube') {
                         // Path to your source code
-                        sh "sonar-scanner"
+                         sh "${tool 'sonar-scanner'}/bin/sonar-scanner"
                     }
                 }
             }
