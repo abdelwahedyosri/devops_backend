@@ -42,8 +42,8 @@ pipeline {
         always {
             script {
                 // Stop and remove all containers
-                sh 'docker stop sonarqube mysql grafana || true'
-                sh 'docker rm sonarqube mysql grafana || true'
+                sh 'docker stop sonarqube mysql grafana'
+                sh 'docker rm sonarqube mysql grafana'
             }
         }
     }
