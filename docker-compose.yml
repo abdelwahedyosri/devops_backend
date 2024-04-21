@@ -31,6 +31,26 @@ services:
     volumes:
       - sonar_data:/opt/sonarqube/data
 
+  nexus:
+    image: sonatype/nexus3
+    container_name: nexus
+    ports:
+      - "8081:8081"
+    networks:
+      - sonarnet
+    volumes:
+      - nexus_data:/nexus-data
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - sonarnet
+    volumes:
+      - prometheus_data:/prometheus
+
 networks:
   sonarnet:
     driver: bridge
@@ -38,3 +58,5 @@ networks:
 volumes:
   mysql_data:
   sonar_data:
+  nexus_data:
+  prometheus_data:
