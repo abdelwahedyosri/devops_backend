@@ -13,9 +13,8 @@ pipeline {
                     // Check if the Docker images are running
                     sh 'docker ps -a'
                     
-                    // Run the Docker containers
-                    sh 'docker run -d --name mysql -p 3306:3306 --network sonarnet -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=sonar -e MYSQL_USER=sonar -e MYSQL_PASSWORD=sonar mysql:latest'
-                    sh 'docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 --network sonarnet -e SONARQUBE_JDBC_URL=jdbc:mysql://mysql:3306/sonar?useUnicode=true\\&characterEncoding=utf8\\&rewriteBatchedStatements=true\\&useConfigs=maxPerformance\\&useSSL=false -e SONARQUBE_JDBC_USERNAME=${SONARQUBE_JDBC_USERNAME} -e SONARQUBE_JDBC_PASSWORD=${SONARQUBE_JDBC_PASSWORD} sonarqube:latest'
+                    // Run the Docker containers using docker-compose
+                    sh 'docker-compose up -d'
                 }
             }
         }
@@ -23,8 +22,8 @@ pipeline {
     
     post {
         always {
-            // Stop the Docker containers
-            sh 'docker stop sonarqube mysql'
+            // Stop and remove the Docker containers
+            sh 'docker-compose down'
         }
     }
 }
