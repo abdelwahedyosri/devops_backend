@@ -12,12 +12,21 @@ pipeline {
         }
         stage('Build and analyze') {
             steps {
-                 script {
+                script {
                     withSonarQubeEnv('SonarQube') {
                         // Path to your source code
-                         sh "${tool 'sonar-scanner'}/bin/sonar-scanner"
+                        sh "${tool 'sonar-scanner'}/bin/sonar-scanner"
                     }
                 }
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Shutdown the Docker containers
+            script {
+                sh 'docker-compose down'
             }
         }
     }
