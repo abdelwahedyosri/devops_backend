@@ -25,7 +25,7 @@ pipeline {
                     sh 'docker rm sonarqube || true'
                     
                     // Run sonarqube container
-                    docker.image("sonarqube:latest").run("-d --name sonarqube -p 9000:9000 -p 9092:9092 --network sonarnet -e SONARQUBE_JDBC_URL=jdbc:mysql://mysql:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance&useSSL=false -e SONARQUBE_JDBC_USERNAME=${SONARQUBE_JDBC_USERNAME} -e SONARQUBE_JDBC_PASSWORD=${SONARQUBE_JDBC_PASSWORD}")
+                    docker.image("sonarqube:latest").run("-d --name sonarqube -p 9000:9000 -p 9092:9092 --network sonarnet -e SONARQUBE_JDBC_URL=jdbc:mysql://mysql:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance&useSSL=false&SONARQUBE_JDBC_USERNAME=${SONARQUBE_JDBC_USERNAME}&SONARQUBE_JDBC_PASSWORD=${SONARQUBE_JDBC_PASSWORD}")
                     
                     // Stop and remove existing grafana container
                     sh 'docker stop grafana || true'
