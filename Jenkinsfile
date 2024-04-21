@@ -20,4 +20,11 @@ pipeline {
             }
         }
     }
+    
+    post {
+        always {
+            // Stop the Docker containers
+            sh 'docker stop sonarqube mysql'
+        }
+    }
 }
