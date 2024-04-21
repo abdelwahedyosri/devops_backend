@@ -13,11 +13,11 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    docker.build("sonarqube", "-f SonarQubeDockerfile .")
-                    docker.build("mysql", "-f MySQLDockerfile .")
-                    docker.build("prometheus", "-f PrometheusDockerfile .")
-                    docker.build("grafana", "-f GrafanaDockerfile .")
-                    docker.build("your-app", "-f AppDockerfile .")
+                    docker.build("sonarqube", "-f SonarQubeDockerfile.yml .")
+                    docker.build("mysql", "-f MySQLDockerfile.yml .")
+                    docker.build("prometheus", "-f PrometheusDockerfile.yml .")
+                    docker.build("grafana", "-f GrafanaDockerfile.yml .")
+                    docker.build("your-app", "-f AppDockerfile.yml .")
                 }
             }
         }
