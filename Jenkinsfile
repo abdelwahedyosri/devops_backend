@@ -10,7 +10,6 @@ pipeline {
                         docker.image("mysql").run("-d -p 3306:3306 --name mysql --network sonarnet -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=sonar -e MYSQL_USER=sonar -e MYSQL_PASSWORD=sonar mysql:latest")
                         docker.image("prom/prometheus").run("-d -p 9090:9090 --name prometheus --network sonarnet prom/prometheus:latest")
                         docker.image("grafana/grafana").run("-d -p 3000:3000 --name grafana --network sonarnet -e GF_SECURITY_ADMIN_PASSWORD=admin grafana/grafana:latest")
-                        docker.image("your-app").run("-d -p 8080:8080 --name your-app --network sonarnet your-app:latest")
                     }
                 }
             }
@@ -28,8 +27,6 @@ pipeline {
                 docker.container('prometheus').remove()
                 docker.container('grafana').stop()
                 docker.container('grafana').remove()
-                docker.container('your-app').stop()
-                docker.container('your-app').remove()
             }
         }
     }
