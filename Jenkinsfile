@@ -13,19 +13,31 @@ pipeline {
                     // Check if the Docker images are running
                     sh 'docker ps -a'
                     
-                    // Start the containers using Docker Compose
-                    sh 'docker-compose -f docker-compose.yml up -d'
+                    // Run the Docker containers using docker-compose
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+        
+        stage('Build and analyze') {
+            steps {
+                script {
+                    // Execute your build commands here
+                    // For example: sh 'mvn clean install'
+
+                    // Run SonarQube analysis
+                    withSonarQubeEnv('SonarQube') {
+                        sh 'mvn sonar:sonar'
+                    }
                 }
             }
         }
     }
-
+    
     post {
         always {
-            // Stop and remove containers after build
-            script {
-                sh 'docker-compose -f docker-compose.yml down'
-            }
+            // Stop and remove containers after the build
+            sh 'docker-compose down'
         }
     }
 }

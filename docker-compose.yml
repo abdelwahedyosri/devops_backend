@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 services:
   mysql:
@@ -13,8 +13,6 @@ services:
       MYSQL_DATABASE: sonar
       MYSQL_USER: sonar
       MYSQL_PASSWORD: sonar
-    volumes:
-      - mysql_data:/var/lib/mysql
 
   sonarqube:
     image: sonarqube:latest
@@ -28,35 +26,22 @@ services:
       SONARQUBE_JDBC_URL: jdbc:mysql://mysql:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance&useSSL=false
       SONARQUBE_JDBC_USERNAME: ${SONARQUBE_JDBC_USERNAME}
       SONARQUBE_JDBC_PASSWORD: ${SONARQUBE_JDBC_PASSWORD}
-    volumes:
-      - sonar_data:/opt/sonarqube/data
 
   nexus:
-    image: sonatype/nexus3
+    image: sonatype/nexus3:latest
     container_name: nexus
     ports:
       - "8081:8081"
     networks:
       - sonarnet
-    volumes:
-      - nexus_data:/nexus-data
 
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:latest
     container_name: prometheus
     ports:
       - "9090:9090"
     networks:
       - sonarnet
-    volumes:
-      - prometheus_data:/prometheus
 
 networks:
   sonarnet:
-    driver: bridge
-
-volumes:
-  mysql_data:
-  sonar_data:
-  nexus_data:
-  prometheus_data:
