@@ -5,6 +5,11 @@ pipeline {
         SONARQUBE_JDBC_USERNAME = 'sonar'
         SONARQUBE_JDBC_PASSWORD = 'sonar'
     }
+     tools {
+        // Define the SonarQube Scanner installation
+        // You should use the name you provided during installation
+        sonarqubeScanner 'SonarQubeScanner'
+    }
 
     stages {
         stage('Run Containers') {
@@ -21,13 +26,12 @@ pipeline {
         
         stage('Build and analyze') {
             steps {
-                script {
-                    // Execute your build commands here
-                    // For example: sh 'mvn clean install'
-
-                    // Run SonarQube analysis
+                 script {
                     withSonarQubeEnv('SonarQube') {
-                        sh 'mvn sonar:sonar'
+                        sh '''mvn clean package sonar:sonar \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.login=admin \
+                        -Dsonar.password=admin'''
                     }
                 }
             }
