@@ -1,2 +1,0 @@
-# Dockerfile for SonarQube
-FROM sonarqube:latest
